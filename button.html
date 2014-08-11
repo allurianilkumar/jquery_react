@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transferPropsTo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://fb.me/react-0.10.0.js"></script>
+    <script src="http://fb.me/react-with-addons-0.10.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.10.0.js"></script> 
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-sham.js"></script>
+    <script src="http://path/to/react-bootstrap-bower/react-bootstrap.min.js"></script>
+    <link rel="stylesheet" href="button.css" />
+  <style>
+        body{margin: 25px;}
+  </style>
+</head>
+<script type="text/jsx">
+    /** @jsx React.DOM */
+
+var Application = React.createClass({
+  getInitialState: function() {
+    return {
+      content: []
+    };
+  },
+
+  render: function() {
+    return (
+      <div className="container">
+        <span className="header">jQuery to React.js Header</span>
+        <button className="add_button"
+                onClick={this.addContent}>Add Element</button>
+        <button className="add_button"
+                onClick={this.timedAddContent}>Add Element in 3 Seconds</button>
+        {this.state.content.map(function(content) {
+          return <ContentItem content={content} removeItem={this.removeItem} />;
+        }.bind(this))}
+      </div>
+    );
+  },
+
+  addContent: function() {
+    var newItem = {className: "added_content", text: "Click to close"},
+        content = this.state.content,
+        newContent = React.addons.update(content, {$push: [newItem]});
+    this.setState({content: newContent});
+  },
+
+  timedAddContent: function() {
+    setTimeout(function() {
+      var newItem = {className: "timed_added_content", text: "Click to close"},
+          content = this.state.content,
+          newContent = React.addons.update(content, {$push: [newItem]});
+      this.setState({content: newContent});
+    }.bind(this), 3000);
+  },
+
+  removeItem: function(item) {
+    var content = this.state.content,
+        index = content.indexOf(item);
+    if (index > -1) {
+      var newContent = React.addons.update(content, {$splice: [[index, 1]]});
+      this.setState({content: newContent});
+    }
+  }
+});
+
+var ContentItem = React.createClass({
+  propTypes: {
+    content: React.PropTypes.object.isRequired,
+    removeItem: React.PropTypes.func.isRequired
+  },
+
+  render: function() {
+    return <span className={this.props.content.className}
+                 onClick={this.onRemove}>{this.props.content.text}</span>;
+  },
+
+  onRemove: function() {
+    this.props.removeItem(this.props.content);
+  }
+});
+React.renderComponent(<Application />, document.body);
+</script>
+</body>
+</html>

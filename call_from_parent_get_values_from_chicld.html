@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transferPropsTo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://fb.me/react-0.10.0.js"></script>
+    <script src="http://fb.me/react-with-addons-0.10.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.10.0.js"></script> 
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-sham.js"></script>
+    <script src="http://path/to/react-bootstrap-bower/react-bootstrap.min.js"></script>
+    <link rel="stylesheet" href="button.css" />
+  <style>
+        body{margin: 25px;}
+  </style>
+</head>
+<script type="text/jsx">
+    /** @jsx React.DOM */
+
+var Parent = React.createClass({
+  handleClick: function (child) {
+    alert('Clicked from Parent.  The Child button text is: "' + child.props.text + '"');
+  },
+  
+  render: function () {
+    return (
+      <Child onClick={this.handleClick} />
+    );
+  }
+});
+
+var Child = React.createClass({
+  getDefaultProps: function () {
+    return { text: "Click me" }  
+  },
+  
+  propogateClick: function () {
+    this.props.onClick(this);
+  },
+  
+  render: function () {
+    return (
+      <button type="button" onClick={this.propogateClick}> {this.props.text} </button>
+    );
+  }  
+});
+
+React.renderComponent(<Parent />, document.body);
+</script>
+</body>
+</html>

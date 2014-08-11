@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transferPropsTo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://fb.me/react-0.10.0.js"></script>
+    <script src="http://fb.me/react-with-addons-0.10.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.10.0.js"></script> 
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-sham.js"></script>
+     <script src="http://path/to/react-bootstrap-bower/react-bootstrap.min.js"></script>
+  <style>
+        body{margin: 25px;}
+  </style>
+</head>
+<script type="text/jsx">
+    /** @jsx React.DOM */
+var Row = React.createClass({
+    componentDidMount: function() {
+        this.startTime = Date.now();
+        this.interval = window.setInterval(this.forceUpdate.bind(this), 50);
+    },
+    componentWillUnmount: function() {
+        window.clearInterval(this.interval);
+    },
+    render: function() {
+        var elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
+        return <span>I am {this.props.name}. I have been running for {elapsed} seconds.</span>;
+    }
+});
+
+var SortableList = React.createClass({
+    render: function() {
+        var items = [];
+        this.props.items.map(function(item, i) {
+            items.push(<li class="ui-state-default" ref={'item' + i} />);
+        });
+        return <ul>{items}</ul>;
+    },
+    componentDidMount: function() {
+        this.renderRows();
+    },
+    componentDidUpdate: function() {
+        this.renderRows();
+    },
+    renderRows: function() {
+        this.props.items.map(function(item, i) {
+            React.renderComponent(<Row name={item} />, this.refs['item' + i].getDOMNode());
+        }.bind(this));
+    },
+    componentWillUnmount: function() {
+        this.props.items.map(function(item, i) {
+            React.unmountAndReleaseReactRootNode(this.refs['item' + i].getDOMNode());
+        });
+    }
+});
+
+var Main = React.createClass({
+    getInitialState: function() {
+        return {items: ['item 1', 'item 2', 'item 3']};
+    },
+    addItem: React.autoBind(function() {
+        this.setState({items: this.state.items.concat(['item ' + (this.state.items.length + 1)])});
+    }),
+    render: function() {
+        return (
+            <div>
+                <SortableList items={this.state.items} ref="list" />
+                <button onClick={this.addItem}>Add item</button>
+            </div>
+        );
+    },
+    componentDidMount: function() {
+        $(this.refs.list.getDOMNode()).sortable();
+    }
+});
+ 
+React.renderComponent(<Main />, document.body);
+</script>
+</html>

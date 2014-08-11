@@ -1,0 +1,85 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transferPropsTo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://fb.me/react-0.10.0.js"></script>
+    <script src="http://fb.me/react-with-addons-0.10.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.10.0.js"></script> 
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-sham.js"></script>
+    <script src="http://path/to/react-bootstrap-bower/react-bootstrap.min.js"></script>
+    <link rel="stylesheet" href="button.css" />
+  <style>
+        body{margin: 25px;}
+  </style>
+</head>
+<body>
+<div id="employees"/>
+<script type="text/jsx">
+    /** @jsx React.DOM */
+window.MyDialog = React.createClass({
+    propTypes: {
+        title:      React.PropTypes.string.isRequired,
+        content:    React.PropTypes.string.isRequired
+    },
+    // statics: {
+    //     // open a dialog with props object as props
+    //     open: function(props) {
+    //         var $anchor = $('#dialog-anchor');
+    //         if (!$anchor.length) {
+    //             $anchor = $('<div></div>')
+    //                 .prop('id', 'dialog-anchor');
+    //                 .appendTo('body');
+    //         }
+    //         return React.renderComponent(
+    //             MyDialog(props),
+    //             $anchor.get(0)
+    //         );
+    //     },
+    //     // close a dialog
+    //     close: function() {
+    //         React.unmountComponentAtNode($('#dialog-anchor').get(0));
+    //     }
+    // },
+
+    // when dialog opens, add a keyup event handler to body
+    componentDidMount: function() {
+        $('body').on('keyup.myDialog', this.globalKeyupHandler);
+    },
+
+    // when dialog closes, clean up the bound keyup event handler on body 
+    componentWillUnmount: function() {
+        $('body').off('keyup.myDialog');
+    },
+
+    // handles keyup events on body
+    globalKeyupHandler: function(e) {
+        if (e.keyCode == 27) { // ESC key
+
+            // close the dialog
+            this.statics.close();
+        }
+    },
+
+    // Extremely basic dialog dom layout - use your own
+    render: function() {
+        <div className="dialog">
+            <div className="title-bar">
+                <div className="title">{this.props.title}</div>
+                    <a href="#" className="close" onClick={this.closeHandler}>
+                </div>
+            </div>
+            <div className="content">
+                {this.props.content}
+            </div>
+        </div>
+    }
+});
+
+</script>
+</body>
+</html>

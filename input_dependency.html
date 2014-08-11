@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transferPropsTo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://fb.me/react-0.10.0.js"></script>
+    <script src="http://fb.me/react-with-addons-0.10.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.10.0.js"></script> 
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-sham.js"></script>
+    <script src="http://path/to/react-bootstrap-bower/react-bootstrap.min.js"></script>
+    <link rel="stylesheet" href="button.css" />
+  <style>
+        body{margin: 25px;}
+  </style>
+</head>
+<body>
+<div id="temp_converter"/>
+<script type="text/jsx">
+/**
+ * @jsx React.DOM
+ */
+var NumberField = React.createClass({
+  render: function() {
+    return <input type="number" value={this.props.value} onInput={this.onInput}/>;
+  },
+  onInput: function(e) {
+    if (!this.props.onValueChange) {
+      return;
+    }
+    var value = parseInt(e.target.value, 10);
+    return this.props.onValueChange(value);
+  }
+});
+var TempConverter = React.createClass({
+  getInitialState: function() {
+    return {c: 0};
+  },
+  render: function() {
+    var c = this.state.c;
+    return <p>
+      <NumberField onValueChange={this.onChangeC} value={c}/> C
+      <br/>
+      <NumberField onValueChange={this.onChangeF} value={c2f(c)}/> F
+    </p>;
+  },
+  onChangeC: function(c) {
+    this.setState({c: c});
+  },
+  onChangeF: function(f) {
+    this.setState({c: f2c(f)});
+  }
+});
+function c2f(c) {
+  return 1.8 * c + 32;
+}
+function f2c(f) {
+  return 0.5555555555555 * (f - 32);
+}
+React.renderComponent(<TempConverter/>,document.getElementById('temp_converter')
+);
+</script>
+</body>
+</html>

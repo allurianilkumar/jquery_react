@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transferPropsTo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://fb.me/react-0.10.0.js"></script>
+    <script src="http://fb.me/react-with-addons-0.10.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.10.0.js"></script> 
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-sham.js"></script>
+    <script src="http://path/to/react-bootstrap-bower/react-bootstrap.min.js"></script>
+    <link rel="stylesheet" href="width_height.css" />
+  <style>
+        body{margin: 25px;}
+  </style>
+</head>
+<script type="text/jsx">
+    /** @jsx React.DOM */
+
+var Todo = React.createClass({
+  render: function() {
+    return <div onClick={this.props.onClick}>{this.props.title}</div>;
+  },
+
+  //this component will be accessed by the parent through the `ref` attribute
+  animate: function() {
+    console.log('Pretend %s is animating', this.props.title);
+  }
+});
+
+var Todos = React.createClass({
+  getInitialState: function() {
+    return {items: ['Apple', 'Banana', 'Cranberry']};
+  },
+
+  handleClick: function(index) {
+    var items = this.state.items.filter(function(item, i) {
+      return index !== i;
+    });
+    this.setState({items: items}, function() {
+      if (items.length === 1) {
+        this.refs.item0.animate();
+      }
+    }.bind(this));
+  },
+
+  render: function() {
+    return (
+      <div>
+        {this.state.items.map(function(item, i) {
+          var boundClick = this.handleClick.bind(this, i);
+          return (
+            <Todo onClick={boundClick} key={i} title={item} ref={'item' + i} />
+          );
+        }, this)}
+      </div>
+    );
+  }
+});
+
+React.renderComponent(<Todos />, document.body);
+</script>
+</body>
+</html>
